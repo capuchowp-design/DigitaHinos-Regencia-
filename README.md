@@ -14,3 +14,8 @@ Partituras dos 480 hinos com a regência animada (batidas, anacruse, fermatas, f
 
 ## Atualizar
 Ao mudar algo, aumente a versão em `sw.js` (`const V='regencia-v1'` → `v2`) para os usuários receberem a atualização.
+
+## Novidades (v3)
+- Padrões de regência desenhados a partir do "Curso de Regência" (2, 3, 4 e 6 tempos, ternário duplo, quaternário alterado).
+- Reprodução com som (órgão sintético): a barra rosa acompanha as notas, a regência fica sincronizada com o áudio e a partitura rola sozinha.
+- Clique em um compasso da partitura para começar dali. Zoom A−/A+ e volume na barra superior.
