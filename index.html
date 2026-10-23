@@ -24,21 +24,30 @@ button{cursor:pointer}button:hover{background:var(--acc);color:var(--bg)}input[t
 #mn{display:none}
 @media(max-width:900px){#mn{display:inline-block}body{height:100dvh}#side{position:fixed;z-index:9;top:0;bottom:0;left:0;transform:translateX(-100%);transition:transform .2s;width:80vw;max-width:300px}#side.open{transform:none;box-shadow:0 0 40px #0008}
 #body{flex-direction:column;overflow:auto}#score{flex:none;height:60vh;margin:10px}#cond{width:auto;margin:0 10px 10px}#bar h2{flex-basis:100%}}
+.imo{display:none}#lh{display:block}#lt{color:var(--acc);font-weight:600;min-height:18px;font-size:13px}
+body.sg #score{overflow:hidden;display:flex;align-items:center;justify-content:center}body.sg #score svg{max-height:100%}
+body.imm{height:100dvh}body.imm #side,body.imm .adv,body.imm #info{display:none!important}body.imm .imo{display:inline-block}
+body.imm #bar{padding:6px 8px;gap:6px}body.imm #bar h2{font-size:14px;min-width:0;flex:1 1 100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body.imm #bar small{display:none}
+body.imm #body{flex-direction:column;overflow:hidden}body.imm #cond{width:auto;margin:6px;flex:none;flex-direction:row;height:44vh}
+body.imm #cond .c{flex:1;padding:6px;display:flex;flex-direction:column;min-width:0}body.imm #cond .c:nth-child(2){flex:.7}
+body.imm #cs,body.imm #lh{flex:1;min-height:0;width:100%}body.imm #score{flex:1 1 auto!important;margin:0 6px 6px;height:auto}
+@media(max-width:900px){body.sg #score{height:auto!important;min-height:120px}body.imm #score{height:auto!important}}
+@media(orientation:landscape) and (max-height:620px){body.imm #body{flex-direction:row}body.imm #cond{flex-direction:column;width:44%;height:auto;margin:6px}body.imm #cond .c:nth-child(1){flex:1.6}body.imm #cond .c:nth-child(2){flex:1}body.imm #score{margin:6px 6px 6px 0}}
 </style></head><body>
 <div id="side"><h1>♪ Regência · CCB</h1><input id="q" placeholder="Buscar nº ou título…"><div id="list"></div></div>
 <div id="main"><div id="bar"><button id="mn">☰ Hinos</button><h2 id="t"></h2>
-<select id="nb" title="Padrão de regência"></select>
-<select id="sty"><option value="cont">Curvas do manual (contínuo)</option><option value="art">Curvas, ictus marcado</option><option value="geo">Linhas retas (geométrico)</option></select>
-♩=<input id="bpm" type="number" min="30" max="200" style="width:64px">
+<select id="nb" class="adv" title="Padrão de regência"></select>
+<select id="sty" class="adv"><option value="cont">Curvas do manual (contínuo)</option><option value="art">Curvas, ictus marcado</option><option value="geo">Linhas retas (geométrico)</option></select>
+<span class="adv">♩=<input id="bpm" type="number" min="30" max="200" style="width:64px"></span><button id="bm" class="imo">♩−</button><button id="bp" class="imo">♩+</button>
 <button id="pl">▶ Reger</button><button id="sp" title="Parar">⏹</button><span title="Volume">🔊</span><input id="vol" type="range" min="0" max="100" value="70">
-<button id="zm" title="Menor">A−</button><button id="zp" title="Maior">A+</button><button id="th">☀/☾</button></div>
-<div id="body"><div id="score"></div><div id="cond"><div class="c"><svg id="cs" viewBox="0 0 300 300" width="100%"></svg><div id="st"></div></div><div class="c" id="info"></div></div></div></div>
+<button id="zm" title="Menor">A−</button><button id="zp" title="Maior">A+</button><button id="sg" title="Mostrar uma pauta por vez">▭ Pauta única</button><button id="im" title="Modo imersivo (tela cheia)">⛶ Imersivo</button><button id="xm" class="imo">✕ Sair</button><button id="th" class="adv">☀/☾</button></div>
+<div id="body"><div id="score"></div><div id="cond"><div class="c"><svg id="cs" viewBox="0 0 300 300" width="100%"></svg><div id="st"></div></div><div class="c" id="lhp"><svg id="lh" viewBox="0 0 300 110" width="100%"></svg><div id="lt"></div></div><div class="c" id="info"></div></div></div></div>
 <script src="data.js"></script>
 <script>
 const $=s=>document.querySelector(s),NS='http://www.w3.org/2000/svg';
 const E=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
-const H=window.HINOS;let cur,sc,A,zs=1.1,state=0,ctx,mg,wave,comp,T0=0,raf,vol=.7,lastS=0,evc={};
-try{const t=localStorage.th;if(t)document.documentElement.dataset.theme=t;const z=+localStorage.zs;if(z)zs=z}catch(e){}
+const H=window.HINOS;let cur,sc,A,zs=1.1,state=0,ctx,mg,wave,comp,T0=0,raf,vol=.7,lastS=0,evc={},single=innerWidth<900,imm=false,zsS=.8,wl=null;
+try{const t=localStorage.th;if(t)document.documentElement.dataset.theme=t;const z=+localStorage.zs;if(z)zs=z;const y=+localStorage.zss;if(y)zsS=y;if(localStorage.sg)single=localStorage.sg=='1'}catch(e){}
 $('#mn').onclick=()=>$('#side').classList.toggle('open');
 $('#th').onclick=()=>{const d=document.documentElement,n=d.dataset.theme=='night'?'light':'night';d.dataset.theme=n;try{localStorage.th=n}catch(e){}};
 function fill(f=''){const L=$('#list');L.innerHTML='';f=f.toLowerCase();H.forEach((h,i)=>{if(f&&!(String(h.n).padStart(3,'0')+' '+h.t.toLowerCase()).includes(f))return;
@@ -115,8 +124,9 @@ function setCur(q){const mi=measureAt(q),m=sc.mp[mi],o=Math.max(0,q-A.ms[mi]),pt
  sc.cu.setAttribute('x',x-8);sc.cu.setAttribute('y',y);sc.cu.setAttribute('height',hh);
  sc.cl.setAttribute('x1',x);sc.cl.setAttribute('x2',x);sc.cl.setAttribute('y1',y);sc.cl.setAttribute('y2',y+hh);
  sc.els.forEach(e=>{const on=q>=e.q0-1e-6&&q<e.q1-1e-6;if(on!=e.on){e.on=on;e.el.classList.toggle('hl',on)}});
- if(m.sys!=sc.last){sc.last=m.sys;const S=$('#score'),k=sc.root.getBoundingClientRect().width/sc.W;S.scrollTo({top:Math.max(0,m.y0*k-S.clientHeight*.18),behavior:'smooth'})}}
-function drawScore(){const S=$('#score');S.innerHTML='';const W=Math.max(560,Math.floor((S.clientWidth-20)/zs));sc=score(cur,W);sc.root.style.width=(W*zs)+'px';sc.root.style.display='block';S.appendChild(sc.root);
+ if(m.sys!=sc.last){sc.last=m.sys;if(SG())sc.root.setAttribute('viewBox',`0 ${m.y0-46} ${sc.W} ${sc.sysH-4}`);else{const S=$('#score'),k=sc.root.getBoundingClientRect().width/sc.W;S.scrollTo({top:Math.max(0,m.y0*k-S.clientHeight*.18),behavior:'smooth'})}}}
+const SG=()=>single||imm;
+function drawScore(){const S=$('#score');S.innerHTML='';const sg=SG(),z=sg?zsS:zs,W=Math.max(sg?300:560,Math.floor((S.clientWidth-20)/z));sc=score(cur,W);sc.root.style.display='block';sc.root.style.width=sg?'100%':(W*z)+'px';S.appendChild(sc.root);
  sc.root.addEventListener('click',ev=>{const p=sc.root.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;const c=p.matrixTransform(sc.root.getScreenCTM().inverse()),i=sc.mp.findIndex(m=>c.x>=m.x0&&c.x<m.x1&&c.y>=m.y0-30&&c.y<=m.y1+40);if(i>=0)play(i)});
  if(A)setCur(Math.max(0,secToQ(lastS)[0]))}
 // ================= PADRÕES DO CURSO DE REGÊNCIA =================
@@ -131,15 +141,27 @@ function mk(an,ct,ict,pass){
 const at=(o,s)=>{s=((s%o.L)+o.L)%o.L;let i=1;while(i<o.C.length-1&&o.C[i]<s)i++;const a=o.P[i-1],b=o.P[i],t=(s-o.C[i-1])/((o.C[i]-o.C[i-1])||1);return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]};
 const S0=[0,0],line=[[0,.33],[0,.66]],tail=[[.45,.55],[.2,.15]],hook=[[.68,1.03],[.72,.96]];
 const PT={
- T3:mk([S0,[0,1],[.58,1],[.58,.95]],[line,[[.12,.9],[.33,.93]],hook,tail],[1,2,3]),
- Q4:mk([S0,[0,1],[-.56,1],[.58,1],[.58,.95]],[line,[[-.08,.9],[-.4,.88]],[[-.48,.78],[.12,.78]],hook,tail],[1,2,3,4]),
+ U1:mk([S0,[0,1]],[line,[[.06,.65],[.05,.3]]],[1]),
  B2:mk([S0,[.2,1],[.3,.86]],[[[0,.7],[.06,1]],[[.28,1.04],[.38,.9]],[[.22,.55],[.08,.2]]],[1,2]),
+ B2L:mk([S0,[0,1],[.22,.9]],[line,[[.04,1.04],[.15,1]],[[.14,.65],[.04,.3]]],[1,2]),
+ B2O:mk([S0,[0,1],[-.2,.82]],[line,[[.12,1.06],[-.12,1]],[[-.3,.6],[-.08,.3]]],[1,2]),
+ T3:mk([S0,[0,1],[.58,1],[.58,.95]],[line,[[.12,.9],[.33,.93]],hook,tail],[1,2,3]),
+ T3U:mk([S0,[0,1],[.6,1],[.25,1]],[line,[[.15,.88],[.4,.9]],[[.7,1.1],[.45,1.12]],[[.2,.8],[.05,.3]]],[1,2,3]),
+ T3P:mk([S0,[0,1],[.6,.95],[.12,.2]],[line,[[.1,.98],[.45,.92]],[[.78,.7],[.5,.22]],[[.15,.12],[.05,.05]]],[1,2,3]),
+ Q4:mk([S0,[0,1],[-.56,1],[.58,1],[.58,.95]],[line,[[-.08,.9],[-.4,.88]],[[-.48,.78],[.12,.78]],hook,tail],[1,2,3,4]),
+ Q4P:mk([S0,[0,1],[-.55,1],[.4,1],[.35,.18]],[line,[[-.05,.95],[-.35,.82]],[[-.3,.7],[.2,.82]],[[.88,.85],[.82,.15]],[[.22,.1],[.06,.05]]],[1,2,3,4]),
+ Q4L:mk([S0,[0,1],[-.6,1],[.65,1],[.2,.95]],[line,[[-.1,.88],[-.45,.85]],[[-.7,1.12],[.3,.75]],[[.8,1.15],[.45,1.1]],[[.25,.7],[.05,.3]]],[1,2,3,4]),
+ Q4A:mk([S0,[0,1],[-.3,1],[.45,1],[.15,.95]],[line,[[-.05,.88],[-.2,.88]],[[-.35,.75],[.3,.75]],[[.55,.9],[.3,.9]],[[.2,.65],[.05,.3]]],[1,2,3,4]),
+ Q4V:mk([S0,[0,1],[-.4,.7],[.4,.45],[.05,.15]],[line,[[0,.85],[-.5,.9]],[[-.5,.45],[.45,.7]],[[.5,.25],[.2,.3]],[[0,.12],[0,.05]]],[1,2,3,4]),
+ Q4M:mk([S0,[0,1],[-.6,.95],[.55,.95],[.35,.35]],[line,[[0,.85],[-.4,.8]],[[-.6,.55],[.6,.55]],[[.65,.5],[.55,.4]],[[.35,.15],[.05,.05]]],[1,2,3,4]),
  S6:mk([S0,[0,1],[-.24,1],[-.55,1],[.25,1],[.58,1],[.58,.93]],[line,[[-.03,.93],[-.18,.92]],[[-.3,.93],[-.45,.92]],[[-.62,.78],[-.03,.76]],[[.32,.94],[.48,.93]],hook,tail],[1,2,3,4,5,6]),
- TD6:mk([S0,[0,1],[.57,1],[.57,.91],S0,[.045,.48],[.28,.42],[.28,.36]],[line,[[.1,.93],[.35,.95]],hook,[[.45,.55],[.12,.2]],[[.01,.15],[.03,.35]],[[.09,.5],[.2,.5]],[[.36,.45],[.38,.36]],[[.2,.25],[.08,.1]]],[1,2,3,5,6,7])};
+ TD6:mk([S0,[0,1],[.57,1],[.57,.91],S0,[.045,.48],[.28,.42],[.28,.36]],[line,[[.1,.93],[.35,.95]],hook,[[.45,.55],[.12,.2]],[[.01,.15],[.03,.35]],[[.09,.5],[.2,.5]],[[.36,.45],[.38,.36]],[[.2,.25],[.08,.1]]],[1,2,3,5,6,7]),
+ N9:mk([S0,[0,1],[-.2,1],[-.4,1],[.2,1],[.4,1],[.62,1],[.55,.62],[.38,.4],[.2,.18]],[line,[[-.04,.94],[-.15,.94]],[[-.25,.94],[-.35,.94]],[[-.45,.8],[.1,.8]],[[.28,.95],[.35,.95]],[[.45,.95],[.55,.95]],[[.72,.9],[.7,.7]],[[.5,.64],[.46,.5]],[[.3,.4],[.25,.3]],[[.15,.12],[.05,.05]]],[1,2,3,4,5,6,7,8,9])};
 PT.QA6=Object.assign({},PT.S6,{pass:[2,5]});
-const BASE={T9:['T3',3],Q12:['Q4',3]},NN={B2:2,T3:3,Q4:4,S6:6,TD6:6,QA6:6,T9:9,Q12:12};
-const NAME={B2:'em 2 (binário)',T3:'em 3 (ternário)',Q4:'em 4 (quaternário)',S6:'em 6 (padrão tradicional)',TD6:'em 6 (ternário duplo)',QA6:'em 6 (quaternário alterado)',T9:'em 9 (3 × 3)',Q12:'em 12 (4 × 3)'};
-const OPT={'2/4':['B2','Q4'],'2/2':['B2','Q4'],'3/4':['T3'],'3/2':['T3'],'3/8':['T3'],'4/4':['Q4','B2'],'6/8':['S6','B2','TD6','QA6'],'6/4':['S6','B2','TD6','QA6'],'9/8':['T3','T9'],'9/4':['T3','T9'],'12/8':['Q4','Q12'],'12/4':['Q4','Q12']};
+const BASE={T9:['T3',3],Q12:['Q4',3]},NN={U1:1,B2:2,B2L:2,B2O:2,T3:3,T3U:3,T3P:3,Q4:4,Q4P:4,Q4L:4,Q4A:4,Q4V:4,Q4M:4,S6:6,TD6:6,QA6:6,T9:9,N9:9,Q12:12};
+const NAME={U1:'em 1 (andamento vivo)',B2:'em 2 · manual (curso)',B2L:'em 2 · em L',B2O:'em 2 · com laço',T3:'em 3 · manual (curso)',T3U:'em 3 · em U (laço)',T3P:'em 3 · clássico',Q4:'em 4 · manual (curso)',Q4P:'em 4 · clássico (arco)',Q4L:'em 4 · com laços',Q4A:'em 4 · arcos curtos',Q4V:'em 4 · vertical (laços)',Q4M:'em 4 · arcos amplos',S6:'em 6 · manual (tradicional)',TD6:'em 6 · ternário duplo',QA6:'em 6 · quaternário alterado',T9:'em 9 · 3 × 3',N9:'em 9 · clássico',Q12:'em 12 · 4 × 3'};
+const G1=['U1'],G2=['B2','B2L','B2O'],G3=['T3','T3U','T3P'],G4=['Q4','Q4P','Q4L','Q4A','Q4V','Q4M'],G6=['S6','TD6','QA6'];
+const OPT={'2/4':[...G2,...G4,...G1],'2/2':[...G2,...G4,...G1],'3/4':[...G3,...G1],'3/2':G3,'3/8':G3,'4/4':[...G4,...G2],'6/8':[...G6,...G2,...G1],'6/4':[...G6,...G2,...G1],'9/8':[...G3,'T9','N9'],'9/4':[...G3,'T9','N9'],'12/8':[...G4,'Q12'],'12/4':[...G4,'Q12']};
 function arcsFor(pid,sty){const[bid,k]=BASE[pid]||[pid,1],p=PT[bid],o=sty=='geo'?p.pl:p.cv,a=p.ict.map(i=>o.aa[i]);if(k==1)return{o,a,pass:p.pass};
  const r=[];a.forEach((x,i)=>{const e=i<a.length-1?a[i+1]:a[0]+o.L,st=Math.min(.14,(e-x)/k);for(let t=0;t<k;t++)r.push(x+st*t)});return{o,a:r,pass:[]}}
 // ================= ANÁLISE DO HINO =================
@@ -176,41 +198,62 @@ function place(s){lastS=s;const[q,hf,h]=secToQ(s);A.cut=q>=A.qEnd-1e-6;const g=A
  if(hf){r=hf>.6?(hf-.6)*70:0;tx=h.last?'Fermata final: sustente e corte (círculo).':'Fermata: sustente; corte leve = batida preparatória.';A.dot.setAttribute('r',11+3*Math.sin(hf*20))}else A.dot.setAttribute('r',11);
  A.ring.setAttribute('cx',g[0]);A.ring.setAttribute('cy',g[1]);A.ring.setAttribute('r',r);
  if(!hf&&s>0){if(q<A.I[0].q)tx='Inspire — levare (gesto preventivo)';else if(q<A.I[1].q-.01)tx=`Gesto preventivo na batida ${A.pre} → ataque`;else if(q>=A.qEnd)tx='Fecho/corte final (círculo)';else{let i=0;while(i<A.I.length-2&&A.I[i+1].q<=q)i++;tx='Batida '+(A.I[i].b+1)}}
- $('#st').textContent=tx;if(sc)setCur(Math.max(q,0));return q}
+ $('#st').textContent=tx;lhUpdate(q,hf,h);if(sc)setCur(Math.max(q,0));return q}
 function info(){const h=cur,ts=h.ts.join('/'),ft=A.fer.map(f=>`compasso ${f.mi+1} (${f.last?'conclusiva — corte final':'preparação — corte leve'})`);
  $('#info').innerHTML=`<b>Compasso ${ts}</b> · marcado ${NAME[A.pid]}<br><b>Andamento:</b> ♩=${$('#bpm').value} (referência).<br>`+
  (A.pk?`<b>Entrada em anacruse:</b> gesto preventivo na batida ${A.pre}, ataque na batida ${A.start}${Math.abs(A.pkb%1)>.01?' (anacruse fracionada: marque a contagem e ataque “em cima”)':''}.`:`<b>Entrada tética:</b> gesto preventivo (“cabo de guarda-chuva”) e ataque na batida 1.`)+
- `<br><b>Fermatas:</b> ${ft.length?ft.join('; '):'nenhuma'}.<br><b>Fecho:</b> movimento circular, mãos visíveis para a próxima estrofe.<br><b>Mãos:</b> a direita marca o tempo; a esquerda indica entradas, cortes e fraseado.<br><b>Desenho:</b> padrões do manual “Curso de Regência”; ${{cont:'movimento contínuo e suave',art:'ictus bem marcado (articulado)',geo:'linhas retas entre as batidas (geométrico)'}[$('#sty').value]}. `+(A.pass.length?'Batidas entre parênteses são apenas de passagem (reduza a velocidade).':'')}
+ `<br><b>Fermatas:</b> ${ft.length?ft.join('; '):'nenhuma'}.<br><b>Fecho:</b> movimento circular, mãos visíveis para a próxima estrofe.<br><b>Mãos:</b> a direita marca o tempo; a esquerda acompanha o contorno da melodia (altura), indica crescendo/diminuendo, entradas e cortes.<br><b>Desenho:</b> padrões do manual “Curso de Regência”; ${{cont:'movimento contínuo e suave',art:'ictus bem marcado (articulado)',geo:'linhas retas entre as batidas (geométrico)'}[$('#sty').value]}. `+(A.pass.length?'Batidas entre parênteses são apenas de passagem (reduza a velocidade).':'')}
 // ================= ÁUDIO =================
 function events(h){if(evc[h.n])return evc[h.n];const ev=[],ms=[];let a=0,k=h.k,al=keyAl(k);const open={};
  h.m.forEach((m,i)=>{ms.push(a);if(m.k!=null){k=m.k;al=keyAl(k)}const acc={};
   m.n.slice().sort((x,y)=>x[0]-y[0]).forEach(n=>{if(n[4]<0)return;const st=n[4]%7;let alt=n[5]!=null?n[5]:(acc[n[4]]!=null?acc[n[4]]:al[st]);if(n[5]!=null)acc[n[4]]=n[5];
    const key=n[2]+'/'+n[4];if(n[6]&2&&open[key]){open[key].d+=n[1];if(!(n[6]&1))delete open[key];return}
-   const e={q:a+n[0],d:n[1],m:(Math.floor(n[4]/7)+1)*12+ST[st]+alt};ev.push(e);if(n[6]&1)open[key]=e});a+=m.d});
+   const e={q:a+n[0],d:n[1],m:(Math.floor(n[4]/7)+1)*12+ST[st]+alt,r:n[2],v:n[3]};ev.push(e);if(n[6]&1)open[key]=e});a+=m.d});
  return evc[h.n]=ev}
 function init(){if(ctx)return;ctx=new(window.AudioContext||window.webkitAudioContext)();wave=ctx.createPeriodicWave(new Float32Array(7),new Float32Array([0,1,.5,.33,.2,.12,.07]));comp=ctx.createDynamicsCompressor();comp.connect(ctx.destination)}
 function play(mi=0){init();stop();ctx.resume();const s0=mi?Math.max(0,sOfQ(A.ms[mi])-A.p*A.spq):0;
- mg=ctx.createGain();mg.gain.value=vol;mg.connect(comp);T0=ctx.currentTime+.25-s0;
+ mg=ctx.createGain();mg.gain.value=vol;try{navigator.wakeLock&&navigator.wakeLock.request('screen').then(w=>wl=w).catch(()=>{})}catch(e){}mg.connect(comp);T0=ctx.currentTime+.25-s0;
  events(cur).forEach(ev=>{const st=sOfQ(ev.q),en=sOfQ(ev.q+ev.d)-.04;if(st<s0-.001||en<=st)return;const t=T0+st,e=T0+en,o=ctx.createOscillator(),g=ctx.createGain();
   o.setPeriodicWave(wave);o.frequency.value=440*Math.pow(2,(ev.m-69)/12);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.03);g.gain.setValueAtTime(.12,Math.max(t+.04,e-.07));g.gain.linearRampToValueAtTime(0,e);
   o.connect(g);g.connect(mg);o.start(t);o.stop(e+.03)});
  state=1;$('#pl').textContent='⏸ Pausar';loop()}
 const sEnd=()=>sOfQ(A.qEnd)+A.p*A.spq;
 function loop(){cancelAnimationFrame(raf);const f=()=>{if(state!=1)return;const s=ctx.currentTime-T0;place(s);if(s>sEnd()){stop();return}raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)}
-function stop(){cancelAnimationFrame(raf);if(mg){mg.gain.cancelScheduledValues(0);mg.disconnect();mg=null}if(ctx&&ctx.state=='suspended')ctx.resume();state=0;$('#pl').textContent='▶ Reger'}
+function stop(){cancelAnimationFrame(raf);if(mg){mg.gain.cancelScheduledValues(0);mg.disconnect();mg=null}if(ctx&&ctx.state=='suspended')ctx.resume();state=0;try{wl&&wl.release()}catch(e){}wl=null;$('#pl').textContent='▶ Reger'}
 $('#pl').onclick=()=>{if(state==0)play(0);else if(state==1){ctx.suspend();state=2;$('#pl').textContent='▶ Continuar'}else{ctx.resume();state=1;$('#pl').textContent='⏸ Pausar';loop()}};
 $('#sp').onclick=()=>{stop();A.trail=[];place(0);if(sc)sc.last=-1};
 $('#vol').oninput=e=>{vol=e.target.value/100;if(mg)mg.gain.value=vol};
-const zoom=d=>{zs=Math.max(.7,Math.min(2.2,zs+d));try{localStorage.zs=zs}catch(e){}drawScore()};
+const zoom=d=>{if(SG()){zsS=Math.max(.5,Math.min(1.6,zsS+d));try{localStorage.zss=zsS}catch(e){}}else{zs=Math.max(.7,Math.min(2.2,zs+d));try{localStorage.zs=zs}catch(e){}}drawScore()};
 $('#zm').onclick=()=>zoom(-.15);$('#zp').onclick=()=>zoom(.15);
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>sc&&drawScore(),250)});
 // ================= CONTROLES =================
 function setup(){const h=cur,k=h.ts.join('/'),o=OPT[k]||['T3'];$('#nb').innerHTML=o.map(n=>`<option value="${n}">${NAME[n]}</option>`).join('');
  if((k=='6/8'||k=='6/4')&&h.bpm>=90)$('#nb').value='B2';build()}
-function build(){stop();A=analyse(cur,$('#nb').value,+$('#bpm').value);bind(A,$('#sty').value);drawCond();info();place(0)}
+function build(){stop();A=analyse(cur,$('#nb').value,+$('#bpm').value);bind(A,$('#sty').value);drawCond();lhBuild();info();place(0)}
 function load(i){stop();$('#side').classList.remove('open');cur=H[i];A=null;$('#t').innerHTML=`${String(cur.n).padStart(3,'0')} · ${cur.t}<small>${cur.c||''}</small>`;$('#bpm').value=Math.round(cur.bpm);
  sc=null;lastS=0;setup();drawScore();place(0);$('#score').scrollTop=0;document.querySelectorAll('#list div').forEach(d=>d.className=d.dataset.i==i?'on':'')}
 $('#nb').onchange=build;$('#sty').onchange=build;$('#bpm').onchange=build;
+// ================= MÃO ESQUERDA =================
+function lhBuild(){const ev=events(cur).filter(e=>e.r==0&&e.v==1).sort((x,y)=>x.q-y.q);let lo=1e9,hi=-1e9;ev.forEach(e=>{lo=Math.min(lo,e.m);hi=Math.max(hi,e.m)});A.lh={ev,lo,hi};
+ const s=$('#lh');s.innerHTML='';E('rect',{x:20,y:8,width:6,height:94,rx:3,fill:'var(--p2)'},s);
+ [['f',16],['mf',56],['p',100]].forEach(([t,y])=>E('text',{x:34,y,'font-size':12,'font-style':'italic',fill:'var(--mut)'},s).textContent=t);
+ A.hand=E('g',{},s);A.palm=E('rect',{x:-13,y:-6,width:26,height:20,rx:7,fill:'var(--acc)'},A.hand);A.fg=[0,1,2,3].map(i=>E('rect',{x:-13+i*7,width:5,rx:2.5,fill:'var(--acc)'},A.hand));E('rect',{x:-22,y:0,width:10,height:6,rx:3,fill:'var(--acc)',transform:'rotate(-25 -17 3)'},A.hand);A.lhHand=true}
+function lvl(q){const{ev,lo,hi}=A.lh;if(!ev.length||hi==lo)return .5;let s=0,w=0;const R=A.p*1.6;for(const e of ev){const d=Math.abs(e.q+e.d/2-q);if(d<R){const k=1-d/R;s+=e.m*k;w+=k}}return w?Math.max(0,Math.min(1,(s/w-lo)/(hi-lo))):.5}
+function lhUpdate(q,hf,h){if(!A.lh)return;const qq=Math.max(q,0);let lv=lvl(qq),dq=lvl(qq+A.p*1.5)-lvl(qq-A.p*.5),st='Mantenha a mão em repouso, atenta',op=.8;
+ if(q<A.I[1].q-.01){st='Entrada: sinalize para a orquestra';op=1;lv=Math.max(lv,.6)}
+ else if(hf){if(hf>.6){st='Corte: feche a mão';op=0}else{st='Sustente: palma aberta';op=1}}
+ else if(q>=A.qEnd){st='Corte final: feche a mão';op=0}
+ else{const nf=A.fer.find(f=>!f.last&&q>=f.q+f.dur-A.p&&q<f.q+f.dur);if(nf){st='Entrada da próxima frase';op=1}else if(dq>.12){st='Crescendo: mão sobe e avança';op=1}else if(dq<-.12){st='Diminuendo: mão desce e fecha';op=.35}}
+ A.hand.setAttribute('transform',`translate(160 ${88-lv*56}) scale(${.8+.4*lv})`);A.fg.forEach((f,i)=>{const hh=3+(i==0||i==3?11:14)*op;f.setAttribute('height',hh);f.setAttribute('y',-6-hh)});
+ A.palm.setAttribute('fill',op==0?'var(--acc2)':'var(--acc)');A.fg.forEach(f=>f.setAttribute('fill',op==0?'var(--acc2)':'var(--acc)'));$('#lt').textContent='Mão esquerda — '+st}
+// ================= MODOS (pauta única / imersivo) =================
+function applyMode(){document.body.classList.toggle('sg',SG());document.body.classList.toggle('imm',imm);$('#sg').textContent=single?'▭ Pauta única ✓':'▭ Pauta única'}
+$('#sg').onclick=()=>{single=!single;try{localStorage.sg=single?'1':'0'}catch(e){}applyMode();drawScore()};
+function setImm(v){imm=v;applyMode();try{if(v&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});else if(!v&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}setTimeout(drawScore,200)}
+$('#im').onclick=()=>setImm(true);$('#xm').onclick=()=>setImm(false);
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&imm){imm=false;applyMode();setTimeout(drawScore,200)}});
+const bpmAdj=d=>{$('#bpm').value=Math.max(30,Math.min(200,+$('#bpm').value+d));build()};$('#bm').onclick=()=>bpmAdj(-4);$('#bp').onclick=()=>bpmAdj(4);
+applyMode();
 fill();load(0);
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script></body></html>
