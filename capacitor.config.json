@@ -1,6 +1,6 @@
 {
   "appId": "br.com.regenciaccb.app",
-  "appName": "Regência CCB",
+  "appName": "DigitaHinos Regência",
   "webDir": "www",
   "server": { "androidScheme": "https" },
   "android": { "backgroundColor": "#050407", "allowMixedContent": false }
