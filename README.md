@@ -19,3 +19,9 @@ Ao mudar algo, aumente a versão em `sw.js` (`const V='regencia-v1'` → `v2`) p
 - Padrões de regência desenhados a partir do "Curso de Regência" (2, 3, 4 e 6 tempos, ternário duplo, quaternário alterado).
 - Reprodução com som (órgão sintético): a barra rosa acompanha as notas, a regência fica sincronizada com o áudio e a partitura rola sozinha.
 - Clique em um compasso da partitura para começar dali. Zoom A−/A+ e volume na barra superior.
+
+## Novidades (v5)
+- Todos os padrões de regência encontrados (1, 2, 3, 4, 6 e 9 tempos, várias formas) — escolha em "Configurações".
+- Celular: Configurações → Partitura (uma pauta por vez) → Mão esquerda | Mão direita → Orientações. Modo imersivo em tela cheia.
+- Mão esquerda: altura acompanha a melodia, crescendo/diminuendo, entradas e cortes.
+- Cada batida tem uma cor no desenho e no ponto que se move. Tema noturno em preto com gradiente rosa.

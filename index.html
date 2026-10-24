@@ -1,47 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="night"><head><meta charset="utf-8"><title>Regência CCB</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#14262b"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#050407"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <style>
-:root{--bg:#14262b;--p:#1b3238;--p2:#244552;--ink:#e6f6f4;--mut:#8fb8b8;--acc:#4fd1c5;--acc2:#f6a8c8;--st:#9cc4c4}
-[data-theme=light]{--bg:#eefaf8;--p:#fff;--p2:#d9f1ef;--ink:#12363a;--mut:#4f7a7c;--acc:#0e9aa7;--acc2:#d6568f;--st:#5d8a8c}
-*{box-sizing:border-box}body{margin:0;height:100vh;display:flex;background:var(--bg);color:var(--ink);font:14px system-ui,sans-serif}
-#side{width:270px;background:var(--p);display:flex;flex-direction:column;border-right:1px solid var(--p2)}
+:root{--bg:#050407;--p:#0f0a12;--p2:#2a1830;--ink:#f6eaf2;--mut:#b78fa8;--acc:#ff7eb9;--acc2:#ffc2e2;--st:#9cc4c4;--g1:rgba(255,64,160,.30);--g2:rgba(168,60,255,.20);--pg:linear-gradient(155deg,rgba(255,110,180,.16),rgba(255,110,180,0) 55%),#0f0a12}
+[data-theme=light]{--bg:#fff4f9;--p:#fff;--p2:#fbe0ee;--ink:#2b1020;--mut:#8a5c78;--acc:#d6338a;--acc2:#8a3cff;--g1:rgba(255,120,190,.38);--g2:rgba(180,120,255,.22);--pg:linear-gradient(155deg,rgba(255,130,190,.22),rgba(255,130,190,0) 60%),#fff}
+*{box-sizing:border-box}
+body{margin:0;height:100vh;display:flex;color:var(--ink);font:14px system-ui,sans-serif;background:radial-gradient(900px 620px at 88% -8%,var(--g1),transparent 70%),radial-gradient(760px 560px at -8% 108%,var(--g2),transparent 70%),var(--bg);background-attachment:fixed}
+#side{width:270px;background:var(--pg);display:flex;flex-direction:column;border-right:1px solid var(--p2)}
 #side h1{font-size:16px;margin:12px;color:var(--acc)}#q{margin:0 12px 8px;padding:8px;border-radius:8px;border:1px solid var(--p2);background:var(--bg);color:var(--ink)}
 #list{overflow:auto;flex:1}#list div{padding:7px 12px;cursor:pointer;border-left:3px solid transparent}#list div:hover{background:var(--p2)}
-#list div.on{background:var(--p2);border-color:var(--acc2);color:var(--acc)}#list b{color:var(--acc2);margin-right:6px}
+#list div.on{background:var(--p2);border-color:var(--acc);color:var(--acc)}#list b{color:var(--acc);margin-right:6px}
 #main{flex:1;display:flex;flex-direction:column;min-width:0}
-#bar{display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--p);flex-wrap:wrap}
+#bar{display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--pg);flex-wrap:wrap;border-bottom:1px solid var(--p2)}
 #bar h2{margin:0;font-size:17px;flex:1;min-width:200px}#bar small{color:var(--mut);display:block;font-weight:400}
+#cfg{display:contents}#cf,#mn{display:none}
 button,select,input[type=number]{background:var(--p2);color:var(--ink);border:1px solid var(--acc);border-radius:8px;padding:6px 10px;font:inherit}
-button{cursor:pointer}button:hover{background:var(--acc);color:var(--bg)}input[type=range]{width:78px;accent-color:var(--acc)}
-#body{flex:1;display:flex;min-height:0}#score{flex:1;overflow:auto;padding:10px;background:var(--p);margin:10px 0 10px 10px;border-radius:12px}
-#score svg{background:#f8fbfa;border-radius:8px}
+button{cursor:pointer}button:hover{background:var(--acc);color:#14060e}input[type=range]{width:78px;accent-color:var(--acc)}
+#body{flex:1;display:flex;min-height:0}#score{flex:1;overflow:auto;padding:10px;background:var(--pg);margin:10px 0 10px 10px;border-radius:14px;border:1px solid var(--p2)}
+#score svg{background:#fbf7fa;border-radius:8px}
 #cond{width:340px;margin:10px;display:flex;flex-direction:column;gap:10px}
-#cond .c{background:var(--p);border-radius:12px;padding:10px}#info{font-size:13px;line-height:1.5;overflow:auto;flex:1}
-#info b{color:var(--acc2)}#st{color:var(--acc);font-weight:600;min-height:20px}
-#cs text{fill:var(--ink)}
-#score svg{--ink:#10282c;--st:#3b5a5c}#score svg text{fill:var(--ink)}.l{stroke:var(--st)}.hl{fill:#d6568f!important;stroke:#d6568f!important}
-#mn{display:none}
-@media(max-width:900px){#mn{display:inline-block}body{height:100dvh}#side{position:fixed;z-index:9;top:0;bottom:0;left:0;transform:translateX(-100%);transition:transform .2s;width:80vw;max-width:300px}#side.open{transform:none;box-shadow:0 0 40px #0008}
-#body{flex-direction:column;overflow:auto}#score{flex:none;height:60vh;margin:10px}#cond{width:auto;margin:0 10px 10px}#bar h2{flex-basis:100%}}
-.imo{display:none}#lh{display:block}#lt{color:var(--acc);font-weight:600;min-height:18px;font-size:13px}
+.c{background:var(--pg);border-radius:14px;padding:10px;border:1px solid var(--p2)}.ct{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);font-weight:700;margin-bottom:4px}
+#info{overflow:auto;flex:1;font-size:13px;line-height:1.5}#inf b{color:var(--acc)}#st{font-weight:700;min-height:20px;margin-bottom:4px}#st2{display:none;font-weight:700;font-size:13px;text-align:center}
+#lt{color:var(--acc);font-weight:600;min-height:18px;font-size:12.5px}#lh{display:block;max-height:210px}
+#cs text,#lh text{fill:var(--ink)}
+#score svg{--ink:#10282c;--st:#3b5a5c}#score svg text{fill:var(--ink)}.l{stroke:var(--st)}.hl{fill:#d6338a!important;stroke:#d6338a!important}
+.imo{display:none}
 body.sg #score{overflow:hidden;display:flex;align-items:center;justify-content:center}body.sg #score svg{max-height:100%}
-body.imm{height:100dvh}body.imm #side,body.imm .adv,body.imm #info{display:none!important}body.imm .imo{display:inline-block}
-body.imm #bar{padding:6px 8px;gap:6px}body.imm #bar h2{font-size:14px;min-width:0;flex:1 1 100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body.imm #bar small{display:none}
-body.imm #body{flex-direction:column;overflow:hidden}body.imm #cond{width:auto;margin:6px;flex:none;flex-direction:row;height:44vh}
-body.imm #cond .c{flex:1;padding:6px;display:flex;flex-direction:column;min-width:0}body.imm #cond .c:nth-child(2){flex:.7}
-body.imm #cs,body.imm #lh{flex:1;min-height:0;width:100%}body.imm #score{flex:1 1 auto!important;margin:0 6px 6px;height:auto}
-@media(max-width:900px){body.sg #score{height:auto!important;min-height:120px}body.imm #score{height:auto!important}}
-@media(orientation:landscape) and (max-height:620px){body.imm #body{flex-direction:row}body.imm #cond{flex-direction:column;width:44%;height:auto;margin:6px}body.imm #cond .c:nth-child(1){flex:1.6}body.imm #cond .c:nth-child(2){flex:1}body.imm #score{margin:6px 6px 6px 0}}
+/* ===== celular: Configurações / Partitura / Mãos / Orientações ===== */
+@media(max-width:900px){
+ body{height:100dvh}#side{position:fixed;z-index:9;top:0;bottom:0;left:0;transform:translateX(-100%);transition:transform .2s;width:80vw;max-width:300px}#side.open{transform:none;box-shadow:0 0 40px #000a}
+ #mn,#cf{display:inline-block}#bar{padding:8px 10px;gap:6px}#bar h2{font-size:15px;min-width:120px}
+ #cfg{display:none;width:100%;flex-wrap:wrap;gap:8px;align-items:center;padding-top:6px;border-top:1px solid var(--p2)}body.cfg #cfg{display:flex}
+ #body{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"sc sc" "lh rh" "inf inf";gap:10px;padding:10px;overflow:auto;align-content:start}
+ #score{grid-area:sc;margin:0;height:auto!important;min-height:120px}#cond{display:contents}
+ #lhp{grid-area:lh}#rhp{grid-area:rh}#info{grid-area:inf;flex:none}
+}
+/* ===== modo imersivo ===== */
+body.imm{height:100dvh}body.imm #side,body.imm .adv,body.imm #inf,body.imm #cf{display:none!important}body.imm .imo{display:inline-block}
+body.imm #cfg{display:flex!important;gap:6px;align-items:center;flex-wrap:wrap;width:auto;border:0;padding:0}
+body.imm #bar{padding:6px 8px;gap:6px;flex-wrap:nowrap;overflow-x:auto}body.imm #bar h2{font-size:14px;min-width:0;flex:1 1 90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body.imm #bar small{display:none}
+body.imm #body{display:flex;flex-direction:column;overflow:hidden;padding:0}
+body.imm #cond{display:flex;width:auto;margin:6px;flex:none;flex-direction:row;height:44vh;gap:6px}
+body.imm #cond .c{flex:1;padding:6px;display:flex;flex-direction:column;min-width:0}body.imm #lhp{order:-1;flex:.7}
+body.imm #cs,body.imm #lh{flex:1;min-height:0;width:100%}body.imm #info{display:none!important}
+body.imm #st2{display:block}body.imm #vol,body.imm #cfg>span[title]{display:none}body.imm #bar button{padding:5px 8px}body.imm #score{flex:1 1 auto;margin:0 6px 6px;height:auto!important}
+@media(orientation:landscape) and (max-height:620px){body.imm #body{flex-direction:row}body.imm #cond{flex-direction:column;width:44%;height:auto;margin:6px}body.imm #lhp{order:0;flex:1}body.imm #rhp{flex:1.6}body.imm #score{margin:6px 6px 6px 0}}
 </style></head><body>
 <div id="side"><h1>♪ Regência · CCB</h1><input id="q" placeholder="Buscar nº ou título…"><div id="list"></div></div>
-<div id="main"><div id="bar"><button id="mn">☰ Hinos</button><h2 id="t"></h2>
-<select id="nb" class="adv" title="Padrão de regência"></select>
+<div id="main"><div id="bar"><button id="mn">☰ Hinos</button><h2 id="t"></h2><button id="pl">▶ Reger</button><button id="sp" title="Parar">⏹</button><button id="cf">⚙ Configurações</button>
+<div id="cfg"><select id="nb" class="adv" title="Padrão de regência"></select>
 <select id="sty" class="adv"><option value="cont">Curvas do manual (contínuo)</option><option value="art">Curvas, ictus marcado</option><option value="geo">Linhas retas (geométrico)</option></select>
 <span class="adv">♩=<input id="bpm" type="number" min="30" max="200" style="width:64px"></span><button id="bm" class="imo">♩−</button><button id="bp" class="imo">♩+</button>
-<button id="pl">▶ Reger</button><button id="sp" title="Parar">⏹</button><span title="Volume">🔊</span><input id="vol" type="range" min="0" max="100" value="70">
-<button id="zm" title="Menor">A−</button><button id="zp" title="Maior">A+</button><button id="sg" title="Mostrar uma pauta por vez">▭ Pauta única</button><button id="im" title="Modo imersivo (tela cheia)">⛶ Imersivo</button><button id="xm" class="imo">✕ Sair</button><button id="th" class="adv">☀/☾</button></div>
-<div id="body"><div id="score"></div><div id="cond"><div class="c"><svg id="cs" viewBox="0 0 300 300" width="100%"></svg><div id="st"></div></div><div class="c" id="lhp"><svg id="lh" viewBox="0 0 300 110" width="100%"></svg><div id="lt"></div></div><div class="c" id="info"></div></div></div></div>
+<span title="Volume">🔊</span><input id="vol" type="range" min="0" max="100" value="70">
+<button id="zm" title="Menor">A−</button><button id="zp" title="Maior">A+</button><button id="sg" class="adv" title="Mostrar uma pauta por vez">▭ Pauta única</button><button id="im" class="adv" title="Modo imersivo (tela cheia)">⛶ Imersivo</button><button id="xm" class="imo">✕ Sair</button><button id="th" class="adv">☀/☾</button></div></div>
+<div id="body"><div id="score"></div><div id="cond">
+<div class="c" id="rhp"><div class="ct">Mão direita</div><svg id="cs" viewBox="0 0 300 300" width="100%"></svg><div id="st2"></div></div>
+<div class="c" id="lhp"><div class="ct">Mão esquerda</div><svg id="lh" viewBox="0 0 160 240" width="100%"></svg><div id="lt"></div></div>
+<div class="c" id="info"><div class="ct">Orientações</div><div id="st"></div><div id="inf"></div></div></div></div></div>
 <script src="data.js"></script>
 <script>
 const $=s=>document.querySelector(s),NS='http://www.w3.org/2000/svg';
@@ -54,6 +69,7 @@ function fill(f=''){const L=$('#list');L.innerHTML='';f=f.toLowerCase();H.forEac
 const d=document.createElement('div');d.innerHTML=`<b>${String(h.n).padStart(3,'0')}</b>${h.t}`;d.dataset.i=i;d.onclick=()=>load(i);if(cur==h)d.className='on';L.appendChild(d)})}
 $('#q').oninput=e=>fill(e.target.value);
 // ================= PARTITURA =================
+const PAL=['#ff5d73','#ffb347','#4be3a0','#4db8ff','#b388ff','#ff7eb9','#ffe066','#6ee7e7','#c0ff72'],pc=i=>PAL[Math.floor(i/A.kg)%PAL.length];
 const ST=[0,2,4,5,7,9,11],SH=[3,0,4,1,5,2,6],FL=[6,2,5,1,4,0,3],TSH=[38,35,39,36,33,37,34],TFL=[34,37,33,36,32,35,31],sp=10;
 const keyAl=k=>{const a=Array(7).fill(0);(k>0?SH.slice(0,k):FL.slice(0,-k)).forEach(s=>a[s]=k>0?1:-1);return a};
 const MUS=(()=>{try{const c=document.createElement('canvas').getContext('2d');c.font='32px serif';return c.measureText('𝄞').width!==c.measureText('\u{10FFFD}').width}catch(e){return false}})();
@@ -114,7 +130,7 @@ function score(h,W){
    x+=mw;mi++})});
  pos.forEach((a,i)=>{if(a.fl&1){const b=pos.slice(i+1).find(c=>c.r==a.r&&c.d==a.d&&c.fl&2);if(b&&b.sys==a.sys)E('path',{d:`M${a.x} ${a.y+7}q${(b.x-a.x)/2} 10 ${b.x-a.x} 0`,stroke:'var(--ink)',fill:'none','stroke-width':1.3},root);else E('path',{d:`M${a.x+4} ${a.y+7}q14 7 28 2`,stroke:'var(--ink)',fill:'none'},root)}});
  const ms=[];let a0=0;h.m.forEach(m=>{ms.push(a0);a0+=m.d});els.forEach(e=>{e.q0=ms[e.mi]+e.o;e.q1=e.q0+e.d});
- const hl=E('rect',{fill:'#0e9aa7',opacity:.13,rx:5},root),cu=E('rect',{fill:'#d6568f',opacity:.28,rx:6,width:16},root),cl2=E('line',{stroke:'#d6568f','stroke-width':2.6},root);
+ const hl=E('rect',{fill:'#ff7eb9',opacity:.16,rx:5},root),cu=E('rect',{fill:'#d6568f',opacity:.28,rx:6,width:16},root),cl2=E('line',{stroke:'#d6568f','stroke-width':2.6},root);
  root.setAttribute('viewBox',`0 0 ${W} ${sys.length*sysH+30}`);return{root,mp,els,hl,cu,cl:cl2,W,sysH,last:-1}}
 function measureAt(q){let mi=0;while(mi<A.ms.length-1&&A.ms[mi+1]<=q+1e-6)mi++;return mi}
 function setCur(q){const mi=measureAt(q),m=sc.mp[mi],o=Math.max(0,q-A.ms[mi]),pts=m.xs.concat([[m.d,m.x1-10]]);let x=pts[0][1];
@@ -174,7 +190,7 @@ function analyse(h,pid,P){const N=NN[pid],ts=h.ts,L=ts[0]*4/ts[1],p=L/N,d0=h.m[0
  I.unshift(pre);const last=I[I.length-1];I.push({q:last.q+p,b:(last.b+1)%N});
  const spq=60/P,holds=fer.map(f=>({q:f.q,ex:Math.max(1.1,f.dur*spq*.9),last:f.last})).sort((x,y)=>x.q-y.q);
  return{pid,N,p,I,fer,holds,ms,qEnd:a,pk,pre:pre.b+1,start:I[1].b+1,spq,q0:pre.q-p,pkb:pk/p}}
-function bind(A,sty){const r=arcsFor(A.pid,sty);A.o=r.o;A.ar=r.a;A.pass=r.pass;A.sty=sty;let prev=-1e9,lap=0;const L=r.o.L;
+function bind(A,sty){const r=arcsFor(A.pid,sty);A.o=r.o;A.ar=r.a;A.pass=r.pass;A.sty=sty;A.kg=BASE[A.pid]?BASE[A.pid][1]:1;let prev=-1e9,lap=0;const L=r.o.L;
  A.I.forEach(it=>{const s=r.a[it.b];while(s+lap*L<prev-1e-6)lap++;it.arc=s+lap*L;prev=it.arc})}
 const qToSec=q=>q*A.spq+A.holds.reduce((a,h)=>a+(h.q<q-1e-6?h.ex:0),0),sOfQ=q=>qToSec(q)-A.q0*A.spq;
 function secToQ(s){let acc=0;s+=A.q0*A.spq;for(const h of A.holds){const so=h.q*A.spq+acc;if(s<=so)return[(s-acc)/A.spq,0];if(s<so+h.ex)return[h.q,(s-so)/h.ex,h];acc+=h.ex}return[(s-acc)/A.spq,0]}
@@ -188,9 +204,9 @@ function gpos(q,nc){const I=A.I,o=A.o;
 function drawCond(){const s=$('#cs');s.innerHTML='';const o=A.o;let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
  o.P.forEach(p=>{x0=Math.min(x0,p[0]);x1=Math.max(x1,p[0]);y0=Math.min(y0,p[1]);y1=Math.max(y1,p[1])});
  const k=Math.min(236/Math.max(x1-x0,.2),230/(y1-y0)),ox=150-(x0+x1)/2*k,oy=150-(y0+y1)/2*k;A.px=p=>[ox+p[0]*k,oy+p[1]*k];
- E('path',{d:o.P.map((p,i)=>(i?'L':'M')+A.px(p).map(v=>v.toFixed(1)).join(' ')).join('')+'Z',fill:'none',stroke:'var(--acc)',opacity:.6,'stroke-width':2.2,'stroke-linejoin':'round'},s);
- A.ar.forEach((a,i)=>{const p=A.px(at(o,a)),ps=A.pass.includes(i+1);E('circle',{cx:p[0],cy:p[1],r:ps?4:6,fill:ps?'none':'var(--p2)',stroke:'var(--acc)'},s);
-  E('text',{x:p[0],y:p[1]+(p[1]>150?20:-10),'text-anchor':'middle','font-size':A.N>6?10:12},s).textContent=ps?`(${i+1})`:i+1});
+ A.ar.forEach((a,i)=>{const e=i<A.ar.length-1?A.ar[i+1]:A.ar[0]+o.L,n=Math.max(6,Math.ceil((e-a)/o.L*170));let d='';for(let k=0;k<=n;k++){const p=A.px(at(o,a+(e-a)*k/n));d+=(k?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)}E('path',{d,fill:'none',stroke:pc(i),opacity:.8,'stroke-width':2.8,'stroke-linecap':'round','stroke-linejoin':'round'},s)});
+ A.ar.forEach((a,i)=>{const p=A.px(at(o,a)),ps=A.pass.includes(i+1);E('circle',{cx:p[0],cy:p[1],r:ps?4:7,fill:ps?'none':'var(--p2)',stroke:pc(i),'stroke-width':2},s);
+  E('text',{x:p[0],y:p[1]+(p[1]>150?21:-11),'text-anchor':'middle','font-size':A.N>6?10:13,'font-weight':700,style:'fill:'+pc(i)},s).textContent=ps?`(${i+1})`:i+1});
  A.tr=E('path',{fill:'none',stroke:'var(--acc2)','stroke-width':3,opacity:.45,'stroke-linecap':'round'},s);A.dot=E('circle',{r:11,fill:'var(--acc2)',stroke:'var(--ink)','stroke-width':2},s);A.ring=E('circle',{r:0,fill:'none',stroke:'var(--acc2)','stroke-width':3},s);A.trail=[]}
 function place(s){lastS=s;const[q,hf,h]=secToQ(s);A.cut=q>=A.qEnd-1e-6;const g=A.px(gpos(q));A.dot.setAttribute('cx',g[0]);A.dot.setAttribute('cy',g[1]);
  A.trail.push(g);if(A.trail.length>16)A.trail.shift();A.tr.setAttribute('d',A.trail.length>1?'M'+A.trail.map(p=>p.join(' ')).join('L'):'');
@@ -198,9 +214,9 @@ function place(s){lastS=s;const[q,hf,h]=secToQ(s);A.cut=q>=A.qEnd-1e-6;const g=A
  if(hf){r=hf>.6?(hf-.6)*70:0;tx=h.last?'Fermata final: sustente e corte (círculo).':'Fermata: sustente; corte leve = batida preparatória.';A.dot.setAttribute('r',11+3*Math.sin(hf*20))}else A.dot.setAttribute('r',11);
  A.ring.setAttribute('cx',g[0]);A.ring.setAttribute('cy',g[1]);A.ring.setAttribute('r',r);
  if(!hf&&s>0){if(q<A.I[0].q)tx='Inspire — levare (gesto preventivo)';else if(q<A.I[1].q-.01)tx=`Gesto preventivo na batida ${A.pre} → ataque`;else if(q>=A.qEnd)tx='Fecho/corte final (círculo)';else{let i=0;while(i<A.I.length-2&&A.I[i+1].q<=q)i++;tx='Batida '+(A.I[i].b+1)}}
- $('#st').textContent=tx;lhUpdate(q,hf,h);if(sc)setCur(Math.max(q,0));return q}
+ let ci=0;while(ci<A.I.length-2&&A.I[ci+1].q<=q)ci++;const col=pc(A.I[ci].b);A.dot.setAttribute('fill',col);A.ring.setAttribute('stroke',col);A.tr.setAttribute('stroke',col);$('#st').textContent=tx;$('#st2').textContent=tx;$('#st').style.color=col;$('#st2').style.color=col;lhUpdate(q,hf,h);if(sc)setCur(Math.max(q,0));return q}
 function info(){const h=cur,ts=h.ts.join('/'),ft=A.fer.map(f=>`compasso ${f.mi+1} (${f.last?'conclusiva — corte final':'preparação — corte leve'})`);
- $('#info').innerHTML=`<b>Compasso ${ts}</b> · marcado ${NAME[A.pid]}<br><b>Andamento:</b> ♩=${$('#bpm').value} (referência).<br>`+
+ $('#inf').innerHTML=`<b>Compasso ${ts}</b> · marcado ${NAME[A.pid]}<br><b>Andamento:</b> ♩=${$('#bpm').value} (referência).<br>`+
  (A.pk?`<b>Entrada em anacruse:</b> gesto preventivo na batida ${A.pre}, ataque na batida ${A.start}${Math.abs(A.pkb%1)>.01?' (anacruse fracionada: marque a contagem e ataque “em cima”)':''}.`:`<b>Entrada tética:</b> gesto preventivo (“cabo de guarda-chuva”) e ataque na batida 1.`)+
  `<br><b>Fermatas:</b> ${ft.length?ft.join('; '):'nenhuma'}.<br><b>Fecho:</b> movimento circular, mãos visíveis para a próxima estrofe.<br><b>Mãos:</b> a direita marca o tempo; a esquerda acompanha o contorno da melodia (altura), indica crescendo/diminuendo, entradas e cortes.<br><b>Desenho:</b> padrões do manual “Curso de Regência”; ${{cont:'movimento contínuo e suave',art:'ictus bem marcado (articulado)',geo:'linhas retas entre as batidas (geométrico)'}[$('#sty').value]}. `+(A.pass.length?'Batidas entre parênteses são apenas de passagem (reduza a velocidade).':'')}
 // ================= ÁUDIO =================
@@ -235,8 +251,8 @@ function load(i){stop();$('#side').classList.remove('open');cur=H[i];A=null;$('#
 $('#nb').onchange=build;$('#sty').onchange=build;$('#bpm').onchange=build;
 // ================= MÃO ESQUERDA =================
 function lhBuild(){const ev=events(cur).filter(e=>e.r==0&&e.v==1).sort((x,y)=>x.q-y.q);let lo=1e9,hi=-1e9;ev.forEach(e=>{lo=Math.min(lo,e.m);hi=Math.max(hi,e.m)});A.lh={ev,lo,hi};
- const s=$('#lh');s.innerHTML='';E('rect',{x:20,y:8,width:6,height:94,rx:3,fill:'var(--p2)'},s);
- [['f',16],['mf',56],['p',100]].forEach(([t,y])=>E('text',{x:34,y,'font-size':12,'font-style':'italic',fill:'var(--mut)'},s).textContent=t);
+ const s=$('#lh');s.innerHTML='';E('rect',{x:16,y:14,width:7,height:212,rx:3.5,fill:'var(--p2)'},s);
+ [['f',24],['mf',124],['p',224]].forEach(([t,y])=>E('text',{x:30,y,'font-size':15,'font-style':'italic',fill:'var(--mut)'},s).textContent=t);
  A.hand=E('g',{},s);A.palm=E('rect',{x:-13,y:-6,width:26,height:20,rx:7,fill:'var(--acc)'},A.hand);A.fg=[0,1,2,3].map(i=>E('rect',{x:-13+i*7,width:5,rx:2.5,fill:'var(--acc)'},A.hand));E('rect',{x:-22,y:0,width:10,height:6,rx:3,fill:'var(--acc)',transform:'rotate(-25 -17 3)'},A.hand);A.lhHand=true}
 function lvl(q){const{ev,lo,hi}=A.lh;if(!ev.length||hi==lo)return .5;let s=0,w=0;const R=A.p*1.6;for(const e of ev){const d=Math.abs(e.q+e.d/2-q);if(d<R){const k=1-d/R;s+=e.m*k;w+=k}}return w?Math.max(0,Math.min(1,(s/w-lo)/(hi-lo))):.5}
 function lhUpdate(q,hf,h){if(!A.lh)return;const qq=Math.max(q,0);let lv=lvl(qq),dq=lvl(qq+A.p*1.5)-lvl(qq-A.p*.5),st='Mantenha a mão em repouso, atenta',op=.8;
@@ -244,7 +260,7 @@ function lhUpdate(q,hf,h){if(!A.lh)return;const qq=Math.max(q,0);let lv=lvl(qq),
  else if(hf){if(hf>.6){st='Corte: feche a mão';op=0}else{st='Sustente: palma aberta';op=1}}
  else if(q>=A.qEnd){st='Corte final: feche a mão';op=0}
  else{const nf=A.fer.find(f=>!f.last&&q>=f.q+f.dur-A.p&&q<f.q+f.dur);if(nf){st='Entrada da próxima frase';op=1}else if(dq>.12){st='Crescendo: mão sobe e avança';op=1}else if(dq<-.12){st='Diminuendo: mão desce e fecha';op=.35}}
- A.hand.setAttribute('transform',`translate(160 ${88-lv*56}) scale(${.8+.4*lv})`);A.fg.forEach((f,i)=>{const hh=3+(i==0||i==3?11:14)*op;f.setAttribute('height',hh);f.setAttribute('y',-6-hh)});
+ A.hand.setAttribute('transform',`translate(98 ${200-lv*150}) scale(${1.5+.7*lv})`);A.fg.forEach((f,i)=>{const hh=3+(i==0||i==3?11:14)*op;f.setAttribute('height',hh);f.setAttribute('y',-6-hh)});
  A.palm.setAttribute('fill',op==0?'var(--acc2)':'var(--acc)');A.fg.forEach(f=>f.setAttribute('fill',op==0?'var(--acc2)':'var(--acc)'));$('#lt').textContent='Mão esquerda — '+st}
 // ================= MODOS (pauta única / imersivo) =================
 function applyMode(){document.body.classList.toggle('sg',SG());document.body.classList.toggle('imm',imm);$('#sg').textContent=single?'▭ Pauta única ✓':'▭ Pauta única'}
@@ -253,6 +269,7 @@ function setImm(v){imm=v;applyMode();try{if(v&&document.documentElement.requestF
 $('#im').onclick=()=>setImm(true);$('#xm').onclick=()=>setImm(false);
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&imm){imm=false;applyMode();setTimeout(drawScore,200)}});
 const bpmAdj=d=>{$('#bpm').value=Math.max(30,Math.min(200,+$('#bpm').value+d));build()};$('#bm').onclick=()=>bpmAdj(-4);$('#bp').onclick=()=>bpmAdj(4);
+$('#cf').onclick=()=>document.body.classList.toggle('cfg');
 applyMode();
 fill();load(0);
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
