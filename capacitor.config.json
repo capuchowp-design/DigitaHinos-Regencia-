@@ -1,0 +1,7 @@
+{
+  "appId": "br.com.regenciaccb.app",
+  "appName": "Regência CCB",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": { "backgroundColor": "#050407", "allowMixedContent": false }
+}
