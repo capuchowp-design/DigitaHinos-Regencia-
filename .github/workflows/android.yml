@@ -20,7 +20,12 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - uses: android-actions/setup-android@v3
+      # O runner ubuntu-latest já traz o Android SDK; basta aceitar as licenças
+      - name: Aceitar licenças do Android SDK
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+      - name: Descobrir versão do build-tools
+        id: bt
+        run: echo "v=$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)" >> "$GITHUB_OUTPUT"
       - name: Instalar dependências
         run: npm install
       - name: Criar projeto Android (se ainda não existir)
@@ -60,7 +65,7 @@ jobs:
           keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
         env:
-          BUILD_TOOLS_VERSION: "35.0.0"
+          BUILD_TOOLS_VERSION: ${{ steps.bt.outputs.v }}
       - name: Guardar APK assinado
         if: env.HAS_KEYSTORE == 'true'
         uses: actions/upload-artifact@v4
